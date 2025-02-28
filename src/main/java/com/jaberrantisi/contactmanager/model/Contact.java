@@ -113,11 +113,9 @@ public class Contact {
 
     public static class ContactBuilder {
 
-
         private String firstName;
 
         private String lastName;
-
 
         private String phoneNumber;
 
