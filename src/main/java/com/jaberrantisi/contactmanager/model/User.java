@@ -18,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class User {
 
+
     @Id
     @GeneratedValue
     @Column(updatable = false, nullable = false, name = "id")
