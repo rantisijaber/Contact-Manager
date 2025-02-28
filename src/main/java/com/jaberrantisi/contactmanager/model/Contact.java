@@ -113,7 +113,6 @@ public class Contact {
 
     public static class ContactBuilder {
 
-        private Long id;
 
         private String firstName;
 
