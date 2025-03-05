@@ -2,6 +2,7 @@ package com.jaberrantisi.contactmanager.service;
 
 import com.jaberrantisi.contactmanager.exceptions.ResourceNotFoundException;
 import com.jaberrantisi.contactmanager.model.Contact;
+import com.jaberrantisi.contactmanager.model.User;
 import com.jaberrantisi.contactmanager.repository.ContactRepo;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ContactService {
         this.contactRepo = contactRepo;
     }
 
-    public void saveContact(Contact contact) {
+    public void saveContact(Contact contact, User user) {
         try {
             contactRepo.save(contact);
         } catch (ConstraintViolationException e) {
@@ -28,7 +29,7 @@ public class ContactService {
         }
     }
 
-    public void deleteContact(UUID contactId, UUID userId) {
+    public void deleteContact(UUID contactId, User user) {
        if (contactRepo.existsById(contactId)) {
            contactRepo.deleteById(contactId);
        } else {
@@ -38,26 +39,20 @@ public class ContactService {
     }
 
 
-    public List<Contact> getAllContacts(UUID userId) {
-        return contactRepo.findAllByUserId(userId);
+    public List<Contact> getAllContacts(User user, String firstName, String lastName, String email, String phoneNumber) {
+        if (firstName != null) {
+            return contactRepo.findByFirstNameContainingAndUser(firstName, user);
+        } else if (lastName != null) {
+            return contactRepo.findByLastNameContainingAndUser(lastName, user);
+        } else if (email != null) {
+            return contactRepo.findByEmailContainingAndUser(email, user);
+        }
+        if (phoneNumber != null) {
+            return contactRepo.findByPhoneNumberContainingAndUser(phoneNumber, user);
+        } else {
+            return contactRepo.findAllByUser(user);
+        }
 
-    }
-
-
-    public List<Contact> getContactsByFirstName(String firstName, UUID userId) {
-        return contactRepo.findByFirstNameContainingAndUserId(firstName,userId);
-    }
-
-    public List<Contact> getContactsByLastName(String lastName, UUID userId) {
-        return contactRepo.findByLastNameContainingAndUserId(lastName, userId);
-    }
-
-    public List<Contact> getContactsByEmail(String email, UUID userId) {
-        return contactRepo.findByEmailContainingAndUserId(email, userId);
-    }
-
-    public List<Contact> getContactsByPhone(String phone, UUID userId) {
-        return contactRepo.findByPhoneNumberContainingAndUserId(phone, userId);
     }
 
 
