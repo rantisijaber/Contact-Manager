@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -90,7 +89,11 @@ public class Contact {
 
     private Character gender;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
 
 
 }
