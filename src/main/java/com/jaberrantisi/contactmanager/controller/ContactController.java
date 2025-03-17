@@ -5,10 +5,7 @@ import com.jaberrantisi.contactmanager.model.Contact;
 import com.jaberrantisi.contactmanager.model.User;
 import com.jaberrantisi.contactmanager.service.ContactService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,7 +14,6 @@ import java.util.List;
 public class ContactController {
 
     private final ContactService contactService;
-
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
     }
@@ -31,14 +27,4 @@ public class ContactController {
         List<Contact> contacts = contactService.getAllContacts(user, firstName, lastName, email, phoneNumber);
         return ResponseEntity.ok(contacts);
     }
-
-
-
-
-
-
-
-
-
-
 }
