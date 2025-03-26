@@ -77,8 +77,7 @@ public class ContactController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<Contact> createContact(@PathVariable UUID userId,
-                                                 @RequestPart Contact createdContact,
-                                                 @RequestPart(required = false) MultipartFile image) {
+                                                 @RequestPart Contact createdContact, @RequestPart(required = false) MultipartFile image) {
 
         try {
             if (image != null && !image.isEmpty()) {
