@@ -1,19 +1,28 @@
 package com.jaberrantisi.contactmanager.config;
 
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.jasypt.util.text.AES256TextEncryptor;
+import org.springframework.beans.factory.annotation.Value;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.springframework.beans.factory.annotation.Value;
-import org.jasypt.util.text.AES256TextEncryptor;
-import org.springframework.stereotype.Component;
 
-@Component
 @Converter(autoApply = true)
 public class EncryptionConverter implements AttributeConverter<String, String> {
-    private static final AES256TextEncryptor encryptor = new AES256TextEncryptor();
+    private static final Logger logger = LoggerFactory.getLogger(EncryptionConverter.class);
+    private final AES256TextEncryptor encryptor = new AES256TextEncryptor();
 
     @Value("${encryption.secret}")
-    public void setEncryptionKey(String key) {
-        encryptor.setPassword(key);
+    private String encryptionKey;
+
+    @PostConstruct
+    public void init() {
+        if (encryptionKey == null || encryptionKey.length() < 32) {
+            throw new IllegalStateException("Invalid encryption key");
+        }
+        encryptor.setPassword(encryptionKey);
     }
 
     @Override
@@ -23,6 +32,14 @@ public class EncryptionConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToEntityAttribute(String dbData) {
-        return (dbData == null || dbData.isBlank()) ? null : encryptor.decrypt(dbData);
+        if (dbData == null || dbData.isBlank()) {
+            return null;
+        }
+        try {
+            return encryptor.decrypt(dbData);
+        } catch (EncryptionOperationNotPossibleException e) {
+            logger.warn("Failed to decrypt data (may be plaintext)");
+            return dbData; // Return as-is (assume plaintext)
+        }
     }
 }
