@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = "contacts")
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Contact {
