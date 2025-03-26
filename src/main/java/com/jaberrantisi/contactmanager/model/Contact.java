@@ -1,12 +1,10 @@
 package com.jaberrantisi.contactmanager.model;
 
 
+import com.jaberrantisi.contactmanager.config.EncryptionConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -16,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "contacts")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,49 +32,32 @@ public class Contact {
     @NotNull(message = "Last name required")
     private String lastName;
 
-
+    @Convert(converter = EncryptionConverter.class)
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Convert(converter = EncryptionConverter.class)
     private String email;
 
+    @Convert(converter = EncryptionConverter.class)
     private String website;
 
-    @Column(name = "street_address")
-    private String address;
-
-    private String city;
-
-    private String state;
-
-    @Column(name = "postal_code")
-    private String zipcode;
-
-    private String country;
-
-    @Column(name = "linkedin_url")
-    private String linkedinUrl;
-
-    @Column(name = "facebook_url")
-    private String facebookUrl;
-
-    @Column(name = "twitter_url")
-    private String twitterUrl;
-
-    @Column(name = "instagram_url")
-    private String instagramUrl;
-
+    @Convert(converter = EncryptionConverter.class)
     @Column(name = "company_name")
     private String companyName;
 
+    @Convert(converter = EncryptionConverter.class)
     @Column(name = "job_title")
     private String jobTitle;
 
+    @Convert(converter = EncryptionConverter.class)
     @Column(name = "relationship_type")
     private String relationshipType;
 
+    @Convert(converter = EncryptionConverter.class)
     private LocalDate birthday;
 
+    @Convert(converter = EncryptionConverter.class)
     private String notes;
 
     @Column(name = "profile_picture_url")
@@ -87,7 +69,6 @@ public class Contact {
     @Column(name = "updated_at")
     private Timestamp updatedAtTimestamp;
 
-    private Character gender;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
